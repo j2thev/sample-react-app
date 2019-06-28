@@ -32,7 +32,7 @@ class ChangePassword extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleBack = this.handleBack.bind(this);
-    
+
     this.state = {
       newPassword: '',
       oldPassword: '',
@@ -105,7 +105,7 @@ class ChangePassword extends Component {
         break;
       }
       case 'confirmPassword': {
-        errors.confirmPassword = (newPassword === value) ? '' : 'Current Password does not match';
+        errors.confirmPassword = (newPassword === value) ? '' : 'Password does not match';
         break;
       }
       default: {

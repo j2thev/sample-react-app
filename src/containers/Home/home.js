@@ -71,7 +71,7 @@ class Home extends Component {
             <Nav className="ml-auto" navbar>
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
-                  { user.firstName } { user.lastName }
+                  { user.firstName }{' '}{ user.lastName }{' '}
                 </DropdownToggle>
                 <DropdownMenu right>
                   <DropdownItem onClick={ this.handleChangePassword }>
