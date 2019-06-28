@@ -137,7 +137,7 @@ class Register extends Component {
                 </FormText>
               </FormGroup>
               <Button color="success" block>SUBMIT</Button>
-              <Button color="danger" block type="button" onClick={ this.handleBack }>BACK</Button>
+              <Button color="secondary" block type="button" onClick={ this.handleBack }>BACK</Button>
             </Form>
             <Modal isOpen={ this.state.modal } toggle={ this.toggle }>
               <ModalBody>

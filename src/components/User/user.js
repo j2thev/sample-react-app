@@ -13,8 +13,6 @@ import * as userAction from '../../actions/userAction';
 
 import { getUser } from '../../api/user';
 
-import _ from 'lodash';
-
 import * as T from './style';
 
 class Login extends Component {
@@ -41,8 +39,8 @@ class Login extends Component {
 
   render() {
     const { users } = this.state;
-    const list = users.map(user =>
-      <tr>
+    const list = users.map((user, i) =>
+      <tr key={i}>
         <th scope="row">{user._id}</th>
         <td>{user.firstName}</td>
         <td>{user.lastName}</td>

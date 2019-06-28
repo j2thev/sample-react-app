@@ -1,12 +1,13 @@
 import * as TYPES from '../constants/actionTypes';
 
 export const login = user => {
-  const { _id, firstName, lastName, email } = user;
+  const { _id, firstName, lastName, email, password } = user;
   const payload = { 
     _id,
     firstName,
     lastName,
     email,
+    password,
     isAuthenticated: true
   };
 
@@ -24,7 +25,15 @@ export const logout = () => {
       firstName: '',
       lastName: '',
       email: '',
+      password: '',
       isAuthenticated: false
     },
+  };
+};
+
+export const changePassword = (newPassword) => {
+  return {
+    type: TYPES.CHANGE_PASSWORD,
+    payload: { password: newPassword},
   };
 };

@@ -5,5 +5,6 @@ export default {
     lastName: '',
     email: '',
     isAuthenticated: false
-  }
+  },
+  component: {}
 };

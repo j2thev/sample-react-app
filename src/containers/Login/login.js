@@ -64,7 +64,7 @@ class Login extends Component {
           history.push('/home');
         } else {
           const error = {
-            message: 'Your Email and/or Password is incorrect'
+            message: 'The email and/or password you’ve entered doesn’t match any account'
           };
 
           throw error;
@@ -94,17 +94,17 @@ class Login extends Component {
             <Form onSubmit={ this.handleSubmit }>
               <FormGroup>
                 <Label>Email</Label>
-                <Input type="email" name="email" required value={ this.state.email } onChange={ this.handleChange } />
+                <Input type="email" name="email" value={ this.state.email } onChange={ this.handleChange } />
               </FormGroup>
               <FormGroup>
                 <Label>Password</Label>
-                <Input type="password" name="password" required value={ this.state.password } onChange={ this.handleChange } />
+                <Input type="password" name="password" value={ this.state.password } onChange={ this.handleChange } />
                 <FormText color="danger">
                   { this.state.errors.login }
                 </FormText>
               </FormGroup>
               <Button block color="primary">SIGN IN</Button>
-              <Button block color="secondary" type="button" onClick={ this.handleSignup }>SIGN UP</Button>
+              <Button block color="success" type="button" onClick={ this.handleSignup }>SIGN UP</Button>
             </Form>
           </Col>
         </Row>

@@ -13,15 +13,16 @@ import {
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
-  DropdownItem,
-  Container,
-  Row,
-  Col
+  DropdownItem
 } from 'reactstrap';
 
 import * as userAction from '../../actions/userAction';
+import * as componentAction from '../../actions/componentAction';
+
+import _ from 'lodash';
 
 import User from '../../components/User';
+import ChangePassword from '../../components/ChangePassword';
 
 class Home extends Component {
   constructor(props) {
@@ -29,6 +30,8 @@ class Home extends Component {
 
     this.toggle = this.toggle.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
+    this.handleNavBrand = this.handleNavBrand.bind(this);
+    this.handleChangePassword = this.handleChangePassword.bind(this);
 
     this.state = {
       isOpen: false
@@ -47,16 +50,22 @@ class Home extends Component {
   }
   
   handleChangePassword() {
-    history.push('/change-password');
+    this.props.setComponent(ChangePassword);
+  }
+
+  handleNavBrand(event) {
+    event.preventDefault();
+    this.props.setComponent(User);
   }
 
   render() {
-    const { user } = this.props;
+    const { user, component } = this.props;
+    const ActiveComponent = _.isEmpty(component) ? User : component;
     
     return (
       <div>
         <Navbar color="dark" dark expand="md">
-          <NavbarBrand href="/">Emerio Toyota</NavbarBrand>
+          <NavbarBrand href="#" onClick={ this.handleNavBrand }>Emerio Toyota</NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
@@ -77,20 +86,21 @@ class Home extends Component {
             </Nav>
           </Collapse>
         </Navbar>
-        <User />
+        <ActiveComponent />
       </div>
     );
   }
 }
 
-const mapStateToProps = ({ user }) => {
+const mapStateToProps = ({ user, component }) => {
   return {
-    user
+    user,
+    component
   }
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(userAction, dispatch);
+  return bindActionCreators({ ...userAction, ...componentAction }, dispatch);
 }
 
 export default connect(
