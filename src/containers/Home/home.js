@@ -58,6 +58,10 @@ class Home extends Component {
     this.props.setComponent(User);
   }
 
+  componentDidMount() {
+    this.props.setComponent(User);
+  }
+
   render() {
     const { user, component } = this.props;
     const ActiveComponent = _.isEmpty(component) ? User : component;

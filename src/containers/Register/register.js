@@ -16,6 +16,8 @@ import {
   ModalFooter
 } from 'reactstrap';
 
+import _ from 'lodash';
+
 import * as T from './style';
 
 import { createUser } from '../../api/user';
@@ -36,7 +38,13 @@ class Register extends Component {
       password: '',
       confirmPassword: '',
       errors: {
+        email: '',
         confirmPassword: ''
+      },
+      alert: {
+        color: '',
+        message: [],
+        visible: false
       }
     }
   }
@@ -47,11 +55,30 @@ class Register extends Component {
     }));
   }
 
+  clearForm() {
+    const errors = { confirmPassword: '' };
+    const alert = { color: '', message: [], visible: false };
+    
+    this.setState({
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      errors,
+      alert
+    });
+  }
+
   handleChange(event) {
     const { name, value } = event.target;
     let errors = this.state.errors;
 
     switch (name) {
+      case 'email': {
+        errors.email = '';
+        break;
+      }
       case 'confirmPassword': {
         errors.confirmPassword = (this.state.password === value) ? '' : `Password doesn't match`;
         break;
@@ -62,22 +89,18 @@ class Register extends Component {
     }
 
     this.setState({
-      errors,
-      [name]: value
+      [name]: value,
+      errors
     });
   }
-
-  handleBack() {
-    history.goBack();
-  }
-
-  handleProceedToLogin() {
+  
+  handleBackToLogin() {
     history.push('/login');
   }
 
   validateForm(errors) {
     let valid = true;
-    Object.values(errors).map(error => error.length > 0 && (valid = false));
+    _.map(errors, (error) => error.length > 0 && (valid = false));
     return valid;
   }
 
@@ -96,14 +119,27 @@ class Register extends Component {
       createUser(data)
         .then(response => {
           if (response.data) {
+            this.clearForm();
             this.toggle();
           }
         })
         .catch(error => {
-          console.log(error);
+          const errors = {};
+          const alert = {
+            color: 'danger',
+            message: [],
+            visible: true
+          };
+
+          _.map(error.response.data.error.errors, (e) => {
+            errors[e.path] = e.message;
+          });
+          
+          this.setState({
+            errors,
+            alert
+          });
         });
-    } else {
-      console.log(this.state.errors);
     }
   }
 
@@ -123,7 +159,10 @@ class Register extends Component {
               </FormGroup>
               <FormGroup>
                 <Label>Email</Label>
-                <Input type="email" value={ this.state.email } required name="email" onChange={ this.handleChange } />
+                <Input type="email" value={ this.state.email } required name="email" onChange={ this.handleChange } error={ this.state.errors.email } />
+                <FormText color="danger">
+                  { this.state.errors.email }
+                </FormText>
               </FormGroup>
               <FormGroup>
                 <Label>Password</Label>
@@ -131,20 +170,20 @@ class Register extends Component {
               </FormGroup>
               <FormGroup>
                 <Label>Confirm Password</Label>
-                <Input type="password" value={ this.state.confirmPassword } required name="confirmPassword" onChange={ this.handleChange } />
+                <Input type="password" value={ this.state.confirmPassword } required name="confirmPassword" onChange={ this.handleChange } error={ this.state.errors.confirmPassword } />
                 <FormText color="danger">
                   { this.state.errors.confirmPassword }
                 </FormText>
               </FormGroup>
               <Button color="success" block>SUBMIT</Button>
-              <Button color="secondary" block type="button" onClick={ this.handleBack }>BACK</Button>
+              <Button color="secondary" block type="button" onClick={ this.handleBackToLogin }>BACK</Button>
             </Form>
             <Modal isOpen={ this.state.modal } toggle={ this.toggle }>
               <ModalBody>
                 Your account has been successfully created!
               </ModalBody>
               <ModalFooter>
-                <Button color="primary" onClick={ this.handleProceedToLogin }>PROCEED TO LOGIN</Button>
+                <Button color="primary" onClick={ this.handleBackToLogin }>PROCEED TO LOGIN</Button>
               </ModalFooter>
             </Modal>
           </Col>

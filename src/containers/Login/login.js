@@ -34,15 +34,28 @@ class Login extends Component {
       email: '',
       password: '',
       errors: {
-        login: ''
+        password: ''
       }
     }
   }
 
   handleChange(event) {
     const { name, value } = event.target;
+    let errors = this.state.errors;
+
+    switch (name) {
+      case 'password': {
+        errors.password = '';
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+
     this.setState({
-      [name]: value
+      [name]: value,
+      errors
     });
   }
 
@@ -72,9 +85,8 @@ class Login extends Component {
       })
       .catch(error => {
         const { message } = _.has(error, 'response.error') ? error.response.error : error;
-
         let errors = {};
-        errors.login = message;
+        errors.password = message;
         
         this.setState({
           errors
@@ -100,7 +112,7 @@ class Login extends Component {
                 <Label>Password</Label>
                 <Input type="password" name="password" value={ this.state.password } onChange={ this.handleChange } />
                 <FormText color="danger">
-                  { this.state.errors.login }
+                  { this.state.errors.password }
                 </FormText>
               </FormGroup>
               <Button block color="primary">SIGN IN</Button>

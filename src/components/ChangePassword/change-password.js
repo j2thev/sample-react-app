@@ -52,45 +52,47 @@ class ChangePassword extends Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    const { _id } = this.props.user;
-    const { newPassword } = this.state;
-    const data = { 
-      password: newPassword
-    };
+    if (this.validateForm(this.state.errors)) {
+      const { _id } = this.props.user;
+      const { newPassword } = this.state;
+      const data = {
+        password: newPassword
+      };
 
-    updateUser(_id, data)
-      .then(response => {
-        const { data } = response.data;
-        let alert = {};
-        alert.color = (data.ok === 1) ? 'success' : 'warning';
-        alert.message = (data.ok === 1) ? 'Password changed!' : 'Change password failed';
-        alert.visible = true;
+      updateUser(_id, data)
+        .then(response => {
+          const { data } = response.data;
+          let alert = {};
+          alert.color = (data.ok === 1) ? 'success' : 'warning';
+          alert.message = (data.ok === 1) ? 'Password changed!' : 'Change password failed';
+          alert.visible = true;
 
-        this.setState({
-          newPassword: '',
-          oldPassword: '',
-          confirmPassword: '',
-          alert
-        }, () => {
-          this.props.changePassword(newPassword);
+          this.setState({
+            newPassword: '',
+            oldPassword: '',
+            confirmPassword: '',
+            alert
+          }, () => {
+            this.props.changePassword(newPassword);
+          });
+        })
+        .catch(error => {
+          const { message } = _.has(error, 'response.error') ? error.response.error : error;
+          let alert = {};
+          alert.color = 'danger';
+          alert.message = message;
+          alert.visible = true;
+
+          this.setState({
+            newPassword: '',
+            oldPassword: '',
+            confirmPassword: '',
+            alert
+          }, () => {
+            this.props.changePassword(newPassword);
+          });
         });
-      })
-      .catch(error => {
-        const { message } = _.has(error, 'response.error') ? error.response.error : error;
-        let alert = {};
-        alert.color = 'danger';
-        alert.message = message;
-        alert.visible = true;
-        
-        this.setState({
-          newPassword: '',
-          oldPassword: '',
-          confirmPassword: '',
-          alert
-        }, () => {
-          this.props.changePassword(newPassword);
-        });
-      });
+    }
   }
 
   handleChange(event) {
@@ -114,8 +116,8 @@ class ChangePassword extends Component {
     }
 
     this.setState({
-      errors,
-      [name]: value
+      [name]: value,
+      errors
     });
   }
 
@@ -133,6 +135,12 @@ class ChangePassword extends Component {
     setTimeout(() => {
       this.setState({ alert });
     }, 5000);
+  }
+
+  validateForm(errors) {
+    let valid = true;
+    _.map(errors, (error) => error.length > 0 && (valid = false));
+    return valid;
   }
 
   render() {
